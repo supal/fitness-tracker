@@ -13,6 +13,15 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import {
+  MatDialog,
+  MAT_DIALOG_DATA,
+  MatDialogRef,
+  MatDialogTitle,
+  MatDialogContent,
+  MatDialogActions,
+  MatDialogClose,
+} from '@angular/material/dialog';
 
 @NgModule({
   imports: [
@@ -30,6 +39,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatCardModule,
     MatSelectModule,
     MatProgressSpinnerModule,
+    MatDialogActions,
+    MatDialogClose,
+    MatDialogContent,
   ],
   exports: [
     MatButtonModule,
@@ -46,6 +58,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     MatCardModule,
     MatSelectModule,
     MatProgressSpinnerModule,
+    MatDialogActions,
+    MatDialogClose,
+    MatDialogContent,
   ],
 })
 export class MaterilaModule {}
