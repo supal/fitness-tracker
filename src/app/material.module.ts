@@ -13,6 +13,7 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatCardModule } from '@angular/material/card';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTableModule } from '@angular/material/table';
 import {
   MatDialog,
   MAT_DIALOG_DATA,
@@ -42,6 +43,7 @@ import {
     MatDialogActions,
     MatDialogClose,
     MatDialogContent,
+    MatTableModule,
   ],
   exports: [
     MatButtonModule,
@@ -61,6 +63,7 @@ import {
     MatDialogActions,
     MatDialogClose,
     MatDialogContent,
+    MatTableModule,
   ],
 })
 export class MaterilaModule {}
