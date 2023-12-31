@@ -19,6 +19,8 @@ import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.com
 import { StopTrainingComponent } from './training/current-training/stop-training.component';
 import { AuthService } from './auth/auth.service';
 import { TrainingService } from './training/training.service';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 
 @NgModule({
   declarations: [
@@ -41,6 +43,17 @@ import { TrainingService } from './training/training.service';
     FlexLayoutModule,
     AppRoutingModule,
     FormsModule,
+    provideFirebaseApp(() =>
+      initializeApp({
+        projectId: 'ng-fitness-tracker-82d23',
+        appId: '1:683613815280:web:9e061c3422df860dbc1d35',
+        storageBucket: 'ng-fitness-tracker-82d23.appspot.com',
+        apiKey: 'AIzaSyBKG1MAR7CWTRaqiypZMgGNIonnL7VOzgU',
+        authDomain: 'ng-fitness-tracker-82d23.firebaseapp.com',
+        messagingSenderId: '683613815280',
+      })
+    ),
+    provideFirestore(() => getFirestore()),
   ],
   providers: [AuthService, TrainingService],
   bootstrap: [AppComponent],

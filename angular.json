@@ -96,6 +96,23 @@
             ],
             "scripts": []
           }
+        },
+        "deploy": {
+          "builder": "@angular/fire:deploy",
+          "options": {
+            "version": 2
+          },
+          "configurations": {
+            "production": {
+              "buildTarget": "fitness-tracker:build:production",
+              "serveTarget": "fitness-tracker:serve:production"
+            },
+            "development": {
+              "buildTarget": "fitness-tracker:build:development",
+              "serveTarget": "fitness-tracker:serve:development"
+            }
+          },
+          "defaultConfiguration": "production"
         }
       }
     }
