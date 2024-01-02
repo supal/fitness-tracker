@@ -1,31 +1,64 @@
 import { Exercise } from './exercise.model';
-import { Subject } from 'rxjs';
+import { Observable, Subject, Subscription } from 'rxjs';
+import { Injectable, inject } from '@angular/core';
+import {
+  Firestore,
+  collection,
+  collectionData,
+  addDoc,
+  DocumentReference,
+  updateDoc,
+  doc,
+} from '@angular/fire/firestore';
+import { UIService } from '../shared/ui.service';
 
+@Injectable()
 export class TrainingService {
+  firestore: Firestore = inject(Firestore);
+
   exerciseChanged = new Subject<Exercise | null>();
+  exercisesChanged = new Subject<Exercise[]>();
+  finishedExercisesChanged = new Subject<Exercise[]>();
 
-  private availableExercises: Exercise[] = [
-    { id: 'crunches', name: 'Crunches', duration: 30, calories: 8 },
-    { id: 'touch-toes', name: 'Touch Toes', duration: 180, calories: 15 },
-    { id: 'side-lunges', name: 'Side Lunges', duration: 120, calories: 18 },
-    { id: 'burpees', name: 'Burpees', duration: 60, calories: 8 },
-  ];
-
+  private availableExercises: Exercise[] = [];
   private runningExercise!: Exercise;
-  private exercises: Exercise[] = [];
+  private finishedExercises!: Exercise[];
+  private fbSubs: Subscription[] = [];
 
-  getAvailableExercises() {
-    return this.availableExercises.slice();
+  constructor(private uiService: UIService) {}
+
+  fetchAvailableExercises() {
+    let exercisesObs!: Observable<Exercise[]>;
+    const aCollection = collection(this.firestore, 'availableExercises');
+    exercisesObs = collectionData(aCollection, {
+      idField: 'id',
+    }) as Observable<Exercise[]>;
+    this.fbSubs.push(
+      exercisesObs.subscribe(
+        (exercises: Exercise[]) => {
+          this.availableExercises = exercises;
+          this.exercisesChanged.next([...this.availableExercises]);
+        },
+        (error) => {
+          this.uiService.loadingStateChanged.next(false);
+          this.uiService.showSnackbar('Show list error', '', 3000);
+          this.exercisesChanged.next([]);
+        }
+      )
+    );
   }
 
   startExercise(selectedId: string) {
+    const docRef = doc(this.firestore, 'availableExercises', selectedId);
+    updateDoc(docRef, { lastSelected: new Date() });
+
     const runEx = this.availableExercises.find((ex) => ex.id === selectedId);
     this.runningExercise = runEx!;
     this.exerciseChanged.next(this.runningExercise);
   }
 
   completeExercise() {
-    this.exercises.push({
+    this.addDataToDatabase({
       ...this.runningExercise,
       date: new Date(),
       state: 'completed',
@@ -34,7 +67,7 @@ export class TrainingService {
   }
 
   cancelExercise(progress: number) {
-    this.exercises.push({
+    this.addDataToDatabase({
       ...this.runningExercise,
       date: new Date(),
       state: 'cancelled',
@@ -48,7 +81,33 @@ export class TrainingService {
     return { ...this.runningExercise };
   }
 
-  getCompletedOrCancelledExercises() {
-    return this.exercises.slice();
+  fetchCompletedOrCancelledExercises() {
+    let exercisesObs!: Observable<Exercise[]>;
+    const fCollection = collection(this.firestore, 'finishedExercises');
+    exercisesObs = collectionData(fCollection, {
+      idField: 'id',
+    }) as Observable<Exercise[]>;
+    this.fbSubs.push(
+      exercisesObs.subscribe((exercises: Exercise[]) => {
+        this.finishedExercises = exercises;
+        this.finishedExercisesChanged.next([...this.finishedExercises]);
+      })
+    );
+  }
+
+  private addDataToDatabase(exercise: Exercise) {
+    if (!exercise) return;
+
+    const fCollection = collection(this.firestore, 'finishedExercises');
+    addDoc(fCollection, exercise).then(
+      (documentReference: DocumentReference) => {
+        // the documentReference provides access to the newly created document
+        console.log(documentReference.id);
+      }
+    );
+  }
+
+  cancelSubscriptions() {
+    this.fbSubs.forEach((sub) => sub.unsubscribe());
   }
 }

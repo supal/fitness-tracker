@@ -1,40 +1,31 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 
-import { AppComponent } from './app.component';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { FormsModule } from '@angular/forms';
-import { MaterilaModule } from './material.module';
-import { SignupComponent } from './auth/signup/signup.component';
-import { LoginComponent } from './auth/login/login.component';
-import { TrainingComponent } from './training/training.component';
-import { CurrentTrainingComponent } from './training/current-training/current-training.component';
-import { NewTrainingComponent } from './training/new-training/new-training.component';
-import { PastTrainingComponent } from './training/past-training/past-training.component';
-import { WelcomeComponent } from './welcome/welcome.component';
-import { AppRoutingModule } from './app-routing.module';
+import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
+import { getAuth, provideAuth } from '@angular/fire/auth';
+import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { FormsModule } from '@angular/forms';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { AppRoutingModule } from './app-routing.module';
+import { AppComponent } from './app.component';
+import { AuthModule } from './auth/auth.module';
+import { AuthService } from './auth/auth.service';
+import { MaterilaModule } from './material.module';
 import { HeaderComponent } from './navigation/header/header.component';
 import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.component';
-import { StopTrainingComponent } from './training/current-training/stop-training.component';
-import { AuthService } from './auth/auth.service';
+import { UIService } from './shared/ui.service';
 import { TrainingService } from './training/training.service';
-import { initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import { getFirestore, provideFirestore } from '@angular/fire/firestore';
+import { WelcomeComponent } from './welcome/welcome.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    SignupComponent,
-    LoginComponent,
-    TrainingComponent,
+
     HeaderComponent,
     SidenavListComponent,
-    CurrentTrainingComponent,
-    NewTrainingComponent,
-    PastTrainingComponent,
+
     WelcomeComponent,
-    StopTrainingComponent,
   ],
   imports: [
     BrowserModule,
@@ -43,6 +34,7 @@ import { getFirestore, provideFirestore } from '@angular/fire/firestore';
     FlexLayoutModule,
     AppRoutingModule,
     FormsModule,
+    AuthModule,
     provideFirebaseApp(() =>
       initializeApp({
         projectId: 'ng-fitness-tracker-82d23',
@@ -54,8 +46,9 @@ import { getFirestore, provideFirestore } from '@angular/fire/firestore';
       })
     ),
     provideFirestore(() => getFirestore()),
+    provideAuth(() => getAuth()),
   ],
-  providers: [AuthService, TrainingService],
+  providers: [AuthService, TrainingService, UIService],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
