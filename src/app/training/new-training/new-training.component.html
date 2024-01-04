@@ -12,8 +12,8 @@
                         <mat-option *ngFor="let exercise of exercises"
                             [value]="exercise.id">{{exercise.name}}</mat-option>
                     </mat-select>
-                    <mat-spinner *ngIf="isLoading"></mat-spinner>
                 </mat-form-field>
+                <mat-spinner *ngIf="isLoading"></mat-spinner>
             </mat-card-content>
             <mat-card-actions fxLayoutAlign="center" *ngIf="!isLoading">
                 <button *ngIf="exercises.length > 0" mat-button type="submit" [disabled]="f.invalid">Start</button>

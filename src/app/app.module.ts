@@ -17,6 +17,8 @@ import { SidenavListComponent } from './navigation/sidenav-list/sidenav-list.com
 import { UIService } from './shared/ui.service';
 import { TrainingService } from './training/training.service';
 import { WelcomeComponent } from './welcome/welcome.component';
+import { StoreModule } from '@ngrx/store';
+import { reducers } from './app.reducer';
 
 @NgModule({
   declarations: [
@@ -47,6 +49,7 @@ import { WelcomeComponent } from './welcome/welcome.component';
     ),
     provideFirestore(() => getFirestore()),
     provideAuth(() => getAuth()),
+    StoreModule.forRoot(reducers),
   ],
   providers: [AuthService, TrainingService, UIService],
   bootstrap: [AppComponent],
