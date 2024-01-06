@@ -1,9 +1,14 @@
 {
-  "hosting": [
-    {
-      "target": "fitness-tracker",
-      "source": ".",
-      "frameworksBackend": {}
+  "hosting": {
+    "target": "fitness-tracker",
+    "public": "dist/fitness-tracker",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ],
+    "frameworksBackend": {
+      "region": "us-central1"
     }
-  ]
+  }
 }
