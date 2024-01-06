@@ -7,17 +7,18 @@
             <mat-card-content fxLayoutAlign="center">
                 <mat-form-field>
                     <mat-label>Select a workout</mat-label>
-                    <mat-select *ngIf="!isLoading && exercises.length > 0" placeholder="Your exercise" ngModel
-                        name="exercise" required>
-                        <mat-option *ngFor="let exercise of exercises"
+                    <mat-select *ngIf="!(isLoading$ | async) && ((exercises$ | async) != null)"
+                        placeholder="Your exercise" ngModel name="exercise" required>
+                        <mat-option *ngFor="let exercise of exercises$ | async"
                             [value]="exercise.id">{{exercise.name}}</mat-option>
                     </mat-select>
                 </mat-form-field>
-                <mat-spinner *ngIf="isLoading"></mat-spinner>
+                <mat-spinner *ngIf="isLoading$ | async"></mat-spinner>
             </mat-card-content>
-            <mat-card-actions fxLayoutAlign="center" *ngIf="!isLoading">
-                <button *ngIf="exercises.length > 0" mat-button type="submit" [disabled]="f.invalid">Start</button>
-                <button *ngIf="exercises.length <= 0" mat-button type="button" (click)="fetchExercises()">Fetch
+            <mat-card-actions fxLayoutAlign="center" *ngIf="!(isLoading$ | async)">
+                <button *ngIf="(exercises$ | async) != null" mat-button type="submit"
+                    [disabled]="f.invalid">Start</button>
+                <button *ngIf="(exercises$ | async) != null" mat-button type="button" (click)="fetchExercises()">Fetch
                     Again</button>
             </mat-card-actions>
         </mat-card>

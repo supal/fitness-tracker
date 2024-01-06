@@ -1,23 +1,18 @@
-import {
-  AfterViewInit,
-  Component,
-  OnDestroy,
-  OnInit,
-  ViewChild,
-} from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { Exercise } from '../exercise.model';
 import { TrainingService } from '../training.service';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
-import { Subscription } from 'rxjs';
+import { Store } from '@ngrx/store';
+import * as fromTraining from '../training.reducer';
 
 @Component({
   selector: 'app-past-training',
   templateUrl: './past-training.component.html',
   styleUrls: ['./past-training.component.css'],
 })
-export class PastTrainingComponent implements OnInit, AfterViewInit, OnDestroy {
+export class PastTrainingComponent implements OnInit, AfterViewInit {
   displayedColumns = ['date', 'name', 'duration', 'calories', 'state'];
   dataSource = new MatTableDataSource<Exercise>();
 
@@ -27,15 +22,10 @@ export class PastTrainingComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild(MatPaginator)
   paginator!: MatPaginator;
 
-  exerciseSubscription!: Subscription;
-
-  constructor(private trainingService: TrainingService) {}
-
-  ngOnDestroy(): void {
-    if (this.exerciseSubscription) {
-      this.exerciseSubscription.unsubscribe();
-    }
-  }
+  constructor(
+    private trainingService: TrainingService,
+    private store: Store<fromTraining.State>
+  ) {}
 
   ngAfterViewInit(): void {
     this.dataSource.sort = this.sort;
@@ -43,10 +33,9 @@ export class PastTrainingComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.exerciseSubscription =
-      this.trainingService.finishedExercisesChanged.subscribe(
-        (exerciseList) => (this.dataSource.data = exerciseList)
-      );
+    this.store
+      .select(fromTraining.getFinishedExercises)
+      .subscribe((exerciseList) => (this.dataSource.data = exerciseList));
     this.trainingService.fetchCompletedOrCancelledExercises();
   }
 

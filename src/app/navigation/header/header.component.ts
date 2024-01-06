@@ -1,11 +1,5 @@
-import {
-  Component,
-  EventEmitter,
-  OnDestroy,
-  OnInit,
-  Output,
-} from '@angular/core';
-import { Subscription, Observable } from 'rxjs';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { Observable } from 'rxjs';
 import { Store } from '@ngrx/store';
 import * as fromRoot from '../../app.reducer';
 import { AuthService } from 'src/app/auth/auth.service';
@@ -19,7 +13,6 @@ import { AuthService } from 'src/app/auth/auth.service';
 export class HeaderComponent implements OnInit {
   @Output() sideNavToggle = new EventEmitter<void>();
   isAuth$!: Observable<boolean>;
-  authSubscription!: Subscription;
 
   constructor(
     private store: Store<fromRoot.State>,

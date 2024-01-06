@@ -15,8 +15,6 @@ import * as Authrx from './auth.actions';
 
 @Injectable()
 export class AuthService {
-  private isAuthenticated: boolean = false;
-
   constructor(
     private router: Router,
     private afAuth: Auth,
